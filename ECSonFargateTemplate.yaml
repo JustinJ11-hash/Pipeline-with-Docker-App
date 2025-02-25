@@ -68,12 +68,6 @@ Resources:
           Essential: true
           PortMappings:
             - ContainerPort: !Ref ContainerPort
-          LogConfiguration:
-            LogDriver: awslogs
-            Options:
-              awslogs-group: /ecs/my-app
-              awslogs-region: !Ref "AWS::Region"
-              awslogs-stream-prefix: ecs
 
   ECSService:
     Type: AWS::ECS::Service
