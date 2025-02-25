@@ -1,0 +1,17 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Installing dependencies...
+      - sudo yum install -y docker
+      - sudo service docker start
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t my-web-app .
+  post_build:
+    commands:
+      - echo Running Docker container on EC2...
+      - docker run -d -p 80:80 my-web-app
+artifacts:
+  files: '**/*'
