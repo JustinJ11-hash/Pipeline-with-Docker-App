@@ -2,16 +2,23 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo Installing dependencies...
-      - sudo yum install -y docker
-      - sudo service docker start
+      - echo logging...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 010438472482.dkr.ecr.us-east-1.amazonaws.com
+      
   build:
     commands:
       - echo Building the Docker image...
-      - docker build -t my-web-app .
+      - docker build -t my-app .
+      - docker tag my-app:latest 010438472482.dkr.ecr.us-east-1.amazonaws.com/my-app:latest
+
+      
   post_build:
     commands:
-      - echo Running Docker container on EC2...
-      - docker run -d -p 80:80 my-web-app
+      - echo Build completed
+      - echo pushing into ECR
+      - docker push 010438472482.dkr.ecr.us-east-1.amazonaws.com/my-app:latest
+      - - printf '[{"name":"%s","imageUri":"%s"}]' "" "" > imagedefinitions.json
+      
 artifacts:
-  files: '**/*'
+  files: 
+   - imagedefinitions.json
